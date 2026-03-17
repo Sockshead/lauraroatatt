@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laura Roa — Tatuajes con amor y respeto</title>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0a0a0a;
+    --paper: #f5f0e8;
+    --red: #c0392b;
+    --gold: #b8860b;
+    --cream: #faf6ef;
+    --muted: #6b6560;
+    --border: rgba(10,10,10,0.15);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2.5rem;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(184,134,11,0.3);
+  }
+
+  .nav-logo {
+    font-family: 'UnifrakturMaguntia', serif;
+    font-size: 1.6rem;
+    color: var(--gold);
+    letter-spacing: 1px;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex; gap: 2rem; list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.95rem;
+    letter-spacing: 3px;
+    color: var(--paper);
+    text-decoration: none;
+    opacity: 0.75;
+    transition: opacity 0.2s, color 0.2s;
+  }
+
+  .nav-links a:hover { opacity: 1; color: var(--gold); }
+
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 8rem 2rem 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 60%, rgba(192,57,43,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-ornament {
+    font-size: 0.75rem;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 8px;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
+  }
+
+  .hero h1 {
+    font-family: 'UnifrakturMaguntia', serif;
+    font-size: clamp(4rem, 12vw, 9rem);
+    color: var(--paper);
+    line-height: 0.9;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero h1 span { color: var(--red); }
+
+  .hero-sub {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 6px;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    margin-top: 0.75rem;
+  }
+
+  .hero-desc {
+    font-style: italic;
+    font-size: 1.1rem;
+    color: rgba(245,240,232,0.65);
+    max-width: 420px;
+    margin: 0 auto 3rem;
+  }
+
+  .divider {
+    display: flex; align-items: center; gap: 1rem;
+    width: 200px; margin: 0 auto 2.5rem;
+    opacity: 0.5;
+  }
+  .divider::before, .divider::after {
+    content: ''; flex: 1;
+    height: 1px; background: var(--gold);
+  }
+  .divider-diamond {
+    width: 6px; height: 6px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 4px;
+    padding: 1rem 3rem;
+    background: var(--red);
+    color: var(--paper);
+    border: 2px solid var(--red);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .btn-primary:hover { background: transparent; color: var(--red); }
+
+  .btn-secondary {
+    display: inline-block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 4px;
+    padding: 1rem 3rem;
+    background: transparent;
+    color: var(--paper);
+    border: 1px solid rgba(245,240,232,0.4);
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+    margin-left: 1rem;
+  }
+
+  .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+
+  section { padding: 6rem 2rem; }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  .section-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 6px;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+    opacity: 0.8;
+  }
+
+  .section-title {
+    font-family: 'UnifrakturMaguntia', serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    color: var(--paper);
+    line-height: 1;
+    margin-bottom: 1.5rem;
+  }
+
+  .about {
+    background: var(--ink);
+    border-top: 1px solid rgba(184,134,11,0.2);
+    border-bottom: 1px solid rgba(184,134,11,0.2);
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+
+  .about-text p {
+    color: rgba(245,240,232,0.72);
+    margin-bottom: 1.25rem;
+    font-size: 1.05rem;
+  }
+
+  .about-text p strong { color: var(--paper); font-weight: 400; }
+
+  .about-tags {
+    display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 2rem;
+  }
+
+  .tag {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    padding: 0.4rem 1rem;
+    border: 1px solid rgba(184,134,11,0.4);
+    color: var(--gold);
+    opacity: 0.8;
+  }
+
+  .about-visual { display: flex; flex-direction: column; gap: 1rem; }
+
+  .stat-card {
+    border: 1px solid rgba(184,134,11,0.2);
+    padding: 1.5rem;
+    background: rgba(184,134,11,0.04);
+  }
+
+  .stat-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
+    color: rgba(245,240,232,0.5);
+    font-style: italic;
+    margin-top: 0.25rem;
+  }
+
+  .how { background: #0f0d0b; }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: 4rem;
+    border: 1px solid rgba(184,134,11,0.2);
+  }
+
+  .step {
+    padding: 2.5rem 2rem;
+    border-right: 1px solid rgba(184,134,11,0.2);
+    position: relative;
+  }
+
+  .step:last-child { border-right: none; }
+
+  .step-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem;
+    color: rgba(192,57,43,0.2);
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+
+  .step h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 3px;
+    color: var(--paper);
+    margin-bottom: 0.75rem;
+  }
+
+  .step p {
+    font-size: 0.9rem;
+    color: rgba(245,240,232,0.55);
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  .flash { background: var(--ink); }
+
+  .flash-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 3rem;
+  }
+
+  .flash-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5px;
+    background: rgba(184,134,11,0.15);
+  }
+
+  .flash-item {
+    background: #111;
+    aspect-ratio: 1;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .flash-item svg {
+    width: 70%; height: 70%;
+    opacity: 0.85;
+    transition: opacity 0.3s, transform 0.3s;
+  }
+
+  .flash-item:hover svg { opacity: 1; transform: scale(1.05); }
+
+  .flash-overlay {
+    position: absolute; inset: 0;
+    background: rgba(10,10,10,0.8);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .flash-item:hover .flash-overlay { opacity: 1; }
+
+  .flash-overlay-label {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 3px;
+    font-size: 0.85rem;
+    color: var(--gold);
+  }
+
+  .flash-overlay-note {
+    font-size: 0.78rem;
+    color: rgba(245,240,232,0.5);
+    font-style: italic;
+  }
+
+  .booking {
+    background: #0f0d0b;
+    border-top: 1px solid rgba(192,57,43,0.3);
+  }
+
+  .booking-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 6rem;
+    align-items: start;
+  }
+
+  .booking-info p {
+    color: rgba(245,240,232,0.6);
+    font-style: italic;
+    margin-bottom: 1.25rem;
+    font-size: 1rem;
+  }
+
+  .booking-note {
+    border-left: 2px solid var(--red);
+    padding-left: 1.25rem;
+    margin-top: 2.5rem;
+  }
+
+  .booking-note p {
+    font-size: 0.88rem;
+    color: rgba(245,240,232,0.45);
+    margin-bottom: 0.5rem;
+  }
+
+  form { display: flex; flex-direction: column; gap: 1.25rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+
+  label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 3px;
+    color: var(--gold);
+    opacity: 0.8;
+  }
+
+  input, select, textarea {
+    background: rgba(245,240,232,0.04);
+    border: 1px solid rgba(245,240,232,0.15);
+    color: var(--paper);
+    font-family: 'Crimson Pro', serif;
+    font-size: 1rem;
+    padding: 0.85rem 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+    border-radius: 0;
+    -webkit-appearance: none;
+  }
+
+  input::placeholder, textarea::placeholder { color: rgba(245,240,232,0.2); font-style: italic; }
+  input:focus, select:focus, textarea:focus { border-color: rgba(184,134,11,0.6); }
+  select option { background: #1a1a1a; }
+  textarea { resize: vertical; min-height: 120px; }
+
+  .file-upload {
+    border: 1px dashed rgba(245,240,232,0.2);
+    padding: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    position: relative;
+  }
+
+  .file-upload:hover { border-color: rgba(184,134,11,0.5); }
+
+  .file-upload input[type="file"] {
+    position: absolute; inset: 0; opacity: 0; cursor: pointer;
+    border: none; padding: 0;
+  }
+
+  .file-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 3px;
+    color: rgba(245,240,232,0.35);
+  }
+
+  .file-sub { font-size: 0.78rem; color: rgba(245,240,232,0.2); font-style: italic; margin-top: 0.25rem; }
+
+  .submit-btn {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 5px;
+    padding: 1.1rem 2rem;
+    background: var(--red);
+    color: var(--paper);
+    border: 2px solid var(--red);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    width: 100%;
+    border-radius: 0;
+  }
+
+  .submit-btn:hover { background: transparent; color: var(--red); }
+
+  .submit-note {
+    font-size: 0.8rem;
+    color: rgba(245,240,232,0.3);
+    font-style: italic;
+    text-align: center;
+    margin-top: 0.25rem;
+  }
+
+  footer {
+    background: #060504;
+    border-top: 1px solid rgba(184,134,11,0.15);
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+
+  .footer-logo {
+    font-family: 'UnifrakturMaguntia', serif;
+    font-size: 2.5rem;
+    color: var(--gold);
+    opacity: 0.6;
+    margin-bottom: 1rem;
+  }
+
+  .footer-text {
+    font-size: 0.85rem;
+    color: rgba(245,240,232,0.25);
+    font-style: italic;
+  }
+
+  .orn-line {
+    display: flex; align-items: center; gap: 1.5rem;
+    margin-bottom: 3rem;
+    opacity: 0.3;
+  }
+  .orn-line::before, .orn-line::after {
+    content: ''; flex: 1; height: 1px; background: var(--gold);
+  }
+  .orn-line span {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 4px;
+    color: var(--gold);
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .about-grid, .booking-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .steps { grid-template-columns: 1fr 1fr; }
+    .step { border-right: none; border-bottom: 1px solid rgba(184,134,11,0.2); }
+    .step:last-child, .step:nth-child(2) { border-bottom: none; }
+    .flash-grid { grid-template-columns: repeat(2,1fr); }
+    .form-row { grid-template-columns: 1fr; }
+    .btn-secondary { margin-left: 0; margin-top: 1rem; display: block; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">Laura Roa</a>
+  <ul class="nav-links">
+    <li><a href="#sobre-mi">Bio</a></li>
+    <li><a href="#proceso">Proceso</a></li>
+    <li><a href="#flash">Flash</a></li>
+    <li><a href="#agendar">Agendar</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <p class="hero-ornament">❧ Bogotá, Colombia ❧</p>
+  <h1>Laura<br><span>Roa</span></h1>
+  <p class="hero-sub">Tatuajes con amor y respeto</p>
+  <div class="divider"><div class="divider-diamond"></div></div>
+  <p class="hero-desc">Arte en piel — tradicional, blackwork, ilustrativo. Cada diseño es único.</p>
+  <div style="display:flex; flex-wrap:wrap; gap:1rem; justify-content:center;">
+    <a href="#agendar" class="btn-primary">Agendar cita</a>
+    <a href="#flash" class="btn-secondary">Ver flash</a>
+  </div>
+</section>
+
+<section class="about" id="sobre-mi">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-text">
+        <p class="section-label">— Sobre mí</p>
+        <h2 class="section-title">El arte<br>es la piel</h2>
+        <p>Soy <strong>Laura Roa</strong>, tatuadora con base en Bogotá. Mi trabajo vive entre el tradicional, el blackwork y lo ilustrativo — con referencias que van del folklore latinoamericano a la cultura pop más oscura.</p>
+        <p>Cada tatuaje que hago lo diseño pensando en <strong>quién lo va a llevar</strong>. No repito diseños, no tomo trabajos que no me emocionen, y me tomo muy en serio el cuidado de tu piel.</p>
+        <p>Trabajo en <strong>Flash Black Tattoo</strong>, donde tenemos disponibilidad limitada. Agendo por orden de formulario + anticipo.</p>
+        <div class="about-tags">
+          <span class="tag">Traditional</span>
+          <span class="tag">Blackwork</span>
+          <span class="tag">Neo-traditional</span>
+          <span class="tag">Ilustrativo</span>
+          <span class="tag">Cholitas</span>
+        </div>
+      </div>
+      <div class="about-visual">
+        <div class="stat-card">
+          <div class="stat-number">832+</div>
+          <div class="stat-label">Tatuajes realizados y publicados</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">6K</div>
+          <div class="stat-label">Personas que siguen el trabajo</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">100%</div>
+          <div class="stat-label">Diseños originales — nunca copiados</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="how" id="proceso">
+  <div class="container">
+    <div class="orn-line"><span>el proceso</span></div>
+    <p class="section-label">— Cómo funciona</p>
+    <h2 class="section-title">Del diseño<br>a tu piel</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3>Envías tu idea</h3>
+        <p>Llenas el formulario con tu concepto, referencias visuales y zona del cuerpo.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3>Cotización</h3>
+        <p>Laura revisa tu idea y te responde con el precio en máximo 48 horas hábiles.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3>Pagas el 50%</h3>
+        <p>Con el anticipo confirmás la fecha. Sin anticipo no hay reserva.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <h3>¡A tatuar!</h3>
+        <p>El día de tu cita, el diseño final ya está listo. Solo te queda disfrutar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="flash" id="flash">
+  <div class="container">
+    <div class="flash-header">
+      <div>
+        <p class="section-label">— Diseños disponibles</p>
+        <h2 class="section-title">Flash</h2>
+      </div>
+      <p style="font-style:italic; font-size:0.9rem; color:rgba(245,240,232,0.4); max-width:220px; text-align:right;">Diseños listos para tatuar. Precio ya incluido.</p>
+    </div>
+    <div class="flash-grid">
+
+      <div class="flash-item">
+        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="100" cy="85" r="35" stroke="#f5f0e8" stroke-width="2.5"/>
+          <path d="M75 85 Q80 60 100 58 Q120 60 125 85" stroke="#f5f0e8" stroke-width="2.5" fill="none"/>
+          <rect x="60" y="82" width="80" height="8" rx="2" stroke="#f5f0e8" stroke-width="2" fill="none"/>
+          <circle cx="88" cy="88" r="4" fill="#c0392b"/>
+          <circle cx="112" cy="88" r="4" fill="#c0392b"/>
+          <path d="M93 98 Q100 103 107 98" stroke="#f5f0e8" stroke-width="1.5" fill="none"/>
+          <line x1="80" y1="92" x2="65" y2="88" stroke="#f5f0e8" stroke-width="1"/>
+          <line x1="80" y1="94" x2="65" y2="94" stroke="#f5f0e8" stroke-width="1"/>
+          <line x1="120" y1="92" x2="135" y2="88" stroke="#f5f0e8" stroke-width="1"/>
+          <line x1="120" y1="94" x2="135" y2="94" stroke="#f5f0e8" stroke-width="1"/>
+          <path d="M85 118 L100 145 L115 118" stroke="#f5f0e8" stroke-width="2" fill="none"/>
+          <path d="M100 145 L90 160 M100 145 L110 160" stroke="#f5f0e8" stroke-width="1.5"/>
+          <path d="M82 118 L75 130 M118 118 L125 130" stroke="#f5f0e8" stroke-width="1.5"/>
+          <text x="100" y="178" text-anchor="middle" font-family="serif" font-size="9" fill="#b8860b" letter-spacing="2">BRUJO</text>
+        </svg>
+        <div class="flash-overlay">
+          <span class="flash-overlay-label">Gato brujo</span>
+          <span class="flash-overlay-note">blackwork · disponible</span>
+        </div>
+      </div>
+
+      <div class="flash-item">
+        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="100" cy="90" rx="40" ry="50" stroke="#f5f0e8" stroke-width="2.5"/>
+          <circle cx="100" cy="62" r="28" stroke="#f5f0e8" stroke-width="2.5"/>
+          <path d="M80 52 L72 38 L85 50" stroke="#f5f0e8" stroke-width="2" fill="none"/>
+          <path d="M120 52 L128 38 L115 50" stroke="#f5f0e8" stroke-width="2" fill="none"/>
+          <circle cx="89" cy="62" r="5" fill="#EF9F27"/>
+          <circle cx="111" cy="62" r="5" fill="#EF9F27"/>
+          <circle cx="89" cy="62" r="2" fill="#0a0a0a"/>
+          <circle cx="111" cy="62" r="2" fill="#0a0a0a"/>
+          <path d="M92 72 Q100 76 108 72" stroke="#f5f0e8" stroke-width="1.5" fill="none"/>
+          <circle cx="100" cy="70" r="4" stroke="#f5f0e8" stroke-width="1.5" fill="none"/>
+          <path d="M78 100 L65 150 M90 128 L82 165 M110 128 L118 165 M122 100 L135 150" stroke="#f5f0e8" stroke-width="2"/>
+          <path d="M82 80 L78 74 M88 76 L86 70 M112 76 L114 70 M118 80 L122 74" stroke="#c0392b" stroke-width="2"/>
+          <path d="M75 88 Q80 92 85 88 M95 92 Q100 96 105 92 M115 88 Q120 92 125 88" stroke="#b8860b" stroke-width="1.5" fill="none"/>
+          <text x="100" y="185" text-anchor="middle" font-family="serif" font-size="8" fill="#c0392b" letter-spacing="2">TIGER</text>
+        </svg>
+        <div class="flash-overlay">
+          <span class="flash-overlay-label">Tigre tradicional</span>
+          <span class="flash-overlay-note">color · disponible</span>
+        </div>
+      </div>
+
+      <div class="flash-item">
+        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M72 50 Q72 35 85 35 Q95 35 100 48 Q105 35 115 35 Q128 35 128 50 Q128 65 100 85 Q72 65 72 50Z" stroke="#EF9F27" stroke-width="3" fill="#c0392b" fill-opacity="0.15"/>
+          <path d="M60 110 Q60 95 73 95 Q83 95 88 108 Q93 95 103 95 Q116 95 116 110 Q116 125 88 145 Q60 125 60 110Z" stroke="#EF9F27" stroke-width="3" fill="none"/>
+          <path d="M105 62 L107 68 L113 68 L108 72 L110 78 L105 74 L100 78 L102 72 L97 68 L103 68Z" stroke="#EF9F27" stroke-width="1.5" fill="none"/>
+          <ellipse cx="120" cy="88" rx="8" ry="12" stroke="#b8860b" stroke-width="2.5" fill="none"/>
+          <ellipse cx="120" cy="88" rx="4" ry="7" stroke="#b8860b" stroke-width="1.5" fill="none"/>
+          <path d="M112 88 L128 88" stroke="#b8860b" stroke-width="2"/>
+          <text x="88" y="130" text-anchor="middle" font-family="serif" font-size="11" fill="#c0392b" font-style="italic">11</text>
+          <text x="100" y="165" text-anchor="middle" font-family="serif" font-size="9" fill="#b8860b" letter-spacing="2">AMOR</text>
+        </svg>
+        <div class="flash-overlay">
+          <span class="flash-overlay-label">Corazones 11:11</span>
+          <span class="flash-overlay-note">color · disponible</span>
+        </div>
+      </div>
+
+      <div class="flash-item">
+        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="100" cy="70" rx="22" ry="28" stroke="#f5f0e8" stroke-width="2"/>
+          <path d="M78 70 Q70 90 65 130 L135 130 Q130 90 122 70" stroke="#f5f0e8" stroke-width="2" fill="none"/>
+          <path d="M70 90 Q100 110 130 90" stroke="#f5f0e8" stroke-width="1.5" fill="none"/>
+          <circle cx="100" cy="55" r="6" stroke="#b8860b" stroke-width="1.5" fill="none"/>
+          <path d="M80 48 Q100 30 120 48" stroke="#b8860b" stroke-width="1.5" fill="none"/>
+          <path d="M85 130 Q100 165 115 130" stroke="#f5f0e8" stroke-width="1.5" fill="none"/>
+          <circle cx="100" cy="100" r="5" stroke="#c0392b" stroke-width="2" fill="none"/>
+          <path d="M100 95 L100 105 M95 100 L105 100" stroke="#c0392b" stroke-width="1.5"/>
+          <path d="M70 58 L62 52 M70 62 L60 62 M130 58 L138 52 M130 62 L140 62" stroke="#b8860b" stroke-width="1.5"/>
+          <text x="100" y="178" text-anchor="middle" font-family="serif" font-size="8" fill="#b8860b" letter-spacing="3">VIRGEN</text>
+        </svg>
+        <div class="flash-overlay">
+          <span class="flash-overlay-label">Virgen</span>
+          <span class="flash-overlay-note">blackwork · disponible</span>
+        </div>
+      </div>
+
+      <div class="flash-item">
+        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="100" cy="95" r="55" stroke="#f5f0e8" stroke-width="3"/>
+          <path d="M100 40 A55 55 0 0 1 100 150 A27.5 27.5 0 0 1 100 95 A27.5 27.5 0 0 0 100 40Z" fill="#f5f0e8" fill-opacity="0.15" stroke="none"/>
+          <circle cx="100" cy="67.5" r="12" fill="#f5f0e8" fill-opacity="0.2" stroke="#f5f0e8" stroke-width="1.5"/>
+          <circle cx="100" cy="122.5" r="12" stroke="#f5f0e8" stroke-width="1.5" fill="none"/>
+          <circle cx="100" cy="67.5" r="5" fill="#f5f0e8"/>
+          <circle cx="100" cy="122.5" r="5" fill="#0a0a0a" stroke="#f5f0e8" stroke-width="1"/>
+          <path d="M50 70 L35 55 M52 60 L38 45 M55 80 L35 78" stroke="#f5f0e8" stroke-width="1.5"/>
+          <path d="M150 70 L165 55 M148 60 L162 45 M145 80 L165 78" stroke="#f5f0e8" stroke-width="1.5"/>
+          <path d="M100 150 L95 170 M100 150 L105 170" stroke="#f5f0e8" stroke-width="1.5"/>
+          <text x="100" y="180" text-anchor="middle" font-family="serif" font-size="8" fill="#b8860b" letter-spacing="2">BALANCE</text>
+        </svg>
+        <div class="flash-overlay">
+          <span class="flash-overlay-label">Yin-yang araña</span>
+          <span class="flash-overlay-note">blackwork · disponible</span>
+        </div>
+      </div>
+
+      <div class="flash-item">
+        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="100" cy="110" rx="30" ry="50" stroke="#f5f0e8" stroke-width="2"/>
+          <circle cx="100" cy="68" r="24" stroke="#f5f0e8" stroke-width="2"/>
+          <path d="M82 58 L76 44 L88 56" stroke="#f5f0e8" stroke-width="2" fill="none"/>
+          <path d="M118 58 L124 44 L112 56" stroke="#f5f0e8" stroke-width="2" fill="none"/>
+          <circle cx="92" cy="68" r="4" fill="#f5f0e8" fill-opacity="0.3"/>
+          <circle cx="108" cy="68" r="4" fill="#f5f0e8" fill-opacity="0.3"/>
+          <path d="M95 76 Q100 79 105 76" stroke="#f5f0e8" stroke-width="1.5" fill="none"/>
+          <circle cx="100" cy="74" r="3" stroke="#f5f0e8" stroke-width="1.5" fill="none"/>
+          <circle cx="68" cy="110" r="8" stroke="#c0392b" stroke-width="2" fill="none"/>
+          <circle cx="68" cy="110" r="3" fill="#c0392b" fill-opacity="0.4"/>
+          <path d="M60 110 L76 110 M68 102 L68 118 M62 104 L74 116 M74 104 L62 116" stroke="#c0392b" stroke-width="1.5"/>
+          <circle cx="132" cy="105" r="8" stroke="#c0392b" stroke-width="2" fill="none"/>
+          <circle cx="132" cy="105" r="3" fill="#c0392b" fill-opacity="0.4"/>
+          <path d="M124 105 L140 105 M132 97 L132 113 M126 99 L138 111 M138 99 L126 111" stroke="#c0392b" stroke-width="1.5"/>
+          <circle cx="75" cy="145" r="7" stroke="#c0392b" stroke-width="2" fill="none"/>
+          <path d="M68 145 L82 145 M75 138 L75 152" stroke="#c0392b" stroke-width="1.5"/>
+          <path d="M80 155 Q95 165 100 160 Q105 165 120 155" stroke="#f5f0e8" stroke-width="1.5" fill="none"/>
+          <text x="100" y="185" text-anchor="middle" font-family="serif" font-size="8" fill="#b8860b" letter-spacing="2">GATITA</text>
+        </svg>
+        <div class="flash-overlay">
+          <span class="flash-overlay-label">Gatita con flores</span>
+          <span class="flash-overlay-note">color · disponible</span>
+        </div>
+      </div>
+
+    </div>
+    <p style="text-align:center; margin-top:2rem; font-style:italic; font-size:0.88rem; color:rgba(245,240,232,0.3);">Estos son ejemplos del estilo. Los flash disponibles actuales los puedes ver en el Instagram.</p>
+  </div>
+</section>
+
+<section class="booking" id="agendar">
+  <div class="container">
+    <div class="orn-line"><span>reserva tu cita</span></div>
+    <div class="booking-grid">
+      <div class="booking-info">
+        <p class="section-label">— Agendar</p>
+        <h2 class="section-title">¿Listos<br>para tatuar?</h2>
+        <p>Llena el formulario con los detalles de tu idea. Laura revisará tu propuesta y te responderá con el precio en 48 horas hábiles.</p>
+        <p>Una vez confirmado el precio, envías el 50% de anticipo para reservar tu fecha.</p>
+        <div class="booking-note">
+          <p>📍 Flash Black Tattoo, Bogotá</p>
+          <p>Citas con disponibilidad limitada</p>
+          <p>No se hacen copias de otros tatuajes</p>
+          <p>Se trabaja solo con anticipo confirmado</p>
+        </div>
+      </div>
+      <div>
+        <form id="booking-form" onsubmit="handleSubmit(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="nombre">Nombre</label>
+              <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
+            </div>
+            <div class="form-group">
+              <label for="tel">WhatsApp / Contacto</label>
+              <input type="text" id="tel" name="tel" placeholder="+57 300..." required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="email">Correo electrónico</label>
+            <input type="email" id="email" name="email" placeholder="tu@correo.com" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="zona">Zona del cuerpo</label>
+              <select id="zona" name="zona" required>
+                <option value="" disabled selected>Selecciona...</option>
+                <option>Antebrazo</option>
+                <option>Brazo</option>
+                <option>Pierna</option>
+                <option>Costillas</option>
+                <option>Espalda</option>
+                <option>Pecho</option>
+                <option>Cuello</option>
+                <option>Tobillo / pie</option>
+                <option>Otro</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="tamano">Tamaño aproximado</label>
+              <select id="tamano" name="tamano" required>
+                <option value="" disabled selected>Selecciona...</option>
+                <option>Pequeño (hasta 5 cm)</option>
+                <option>Mediano (5–10 cm)</option>
+                <option>Grande (10–20 cm)</option>
+                <option>Muy grande (más de 20 cm)</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="estilo">Estilo que te interesa</label>
+            <select id="estilo" name="estilo">
+              <option value="" disabled selected>Selecciona...</option>
+              <option>Tradicional / neo-tradicional</option>
+              <option>Blackwork / linework</option>
+              <option>Ilustrativo</option>
+              <option>Flash disponible</option>
+              <option>No estoy seguro/a, confío en Laura</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="idea">Cuéntame tu idea</label>
+            <textarea id="idea" name="idea" placeholder="Describe tu concepto, inspiración, elementos que quieres incluir, colores, referencias... Entre más detalle, mejor." required></textarea>
+          </div>
+          <div class="form-group">
+            <label>Referencias visuales</label>
+            <div class="file-upload">
+              <input type="file" accept="image/*" multiple id="refs">
+              <div class="file-label">Subir imágenes de referencia</div>
+              <div class="file-sub">JPG, PNG, HEIC · máx. 5 imágenes</div>
+            </div>
+          </div>
+          <button type="submit" class="submit-btn">Enviar solicitud →</button>
+          <p class="submit-note">Laura te responde en máximo 48 horas hábiles con precio y disponibilidad.</p>
+        </form>
+
+        <div id="success-msg" style="display:none; text-align:center; padding:3rem 2rem; border:1px solid rgba(184,134,11,0.3);">
+          <div style="font-family:'UnifrakturMaguntia',serif; font-size:3rem; color:#b8860b; margin-bottom:1rem;">✦</div>
+          <p style="font-family:'Bebas Neue',sans-serif; letter-spacing:4px; font-size:1rem; color:#f5f0e8; margin-bottom:0.75rem;">Solicitud enviada</p>
+          <p style="font-style:italic; color:rgba(245,240,232,0.5); font-size:0.9rem;">Laura revisará tu idea y te escribirá en máximo 48 horas hábiles con el precio y disponibilidad. 🖤</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Laura Roa</div>
+  <p class="footer-text">Bogotá · @lauraroatatt · Flash Black Tattoo</p>
+  <p style="margin-top:0.75rem; font-size:0.75rem; color:rgba(245,240,232,0.12); font-style:italic;">Tatuajes con amor y respeto 🩸</p>
+</footer>
+
+<script>
+  function handleSubmit(e) {
+    e.preventDefault();
+    const form = document.getElementById('booking-form');
+    const success = document.getElementById('success-msg');
+    form.style.display = 'none';
+    success.style.display = 'block';
+  }
+</script>
+
+</body>
+</html>
