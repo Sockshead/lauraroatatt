@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Laura Roa — Tatuajes con amor y respeto</title>
 <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<script>
+  !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]);t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+" (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureFlagEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+  posthog.init('phc_AguteUtTwXCmH5BLdz7UecPAQAFdZRX3ztSc6VErgBZs', {
+    api_host: 'https://us.i.posthog.com',
+    person_profiles: 'identified_only',
+  });
+</script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -483,6 +490,181 @@
     color: var(--gold);
   }
 
+  /* ── Testimonials ── */
+  .testimonials {
+    background: #0f0d0b;
+    border-top: 1px solid rgba(184,134,11,0.2);
+    border-bottom: 1px solid rgba(184,134,11,0.2);
+  }
+
+  .testimonials-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+  }
+
+  .carousel-wrapper {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .carousel-track {
+    display: flex;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: grab;
+    user-select: none;
+  }
+
+  .carousel-track:active { cursor: grabbing; }
+
+  .testimonial-card {
+    min-width: 100%;
+    padding: 0 1rem;
+    box-sizing: border-box;
+  }
+
+  .testimonial-inner {
+    border: 1px solid rgba(184,134,11,0.2);
+    background: rgba(184,134,11,0.03);
+    padding: 3rem;
+    max-width: 780px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .testimonial-quote-mark {
+    font-family: 'UnifrakturMaguntia', serif;
+    font-size: 6rem;
+    color: var(--red);
+    opacity: 0.2;
+    line-height: 1;
+    position: absolute;
+    top: 1rem;
+    left: 2.5rem;
+    pointer-events: none;
+  }
+
+  .testimonial-stars {
+    display: flex;
+    gap: 0.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .testimonial-stars span {
+    color: var(--gold);
+    font-size: 1rem;
+  }
+
+  .testimonial-text {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+    color: rgba(245,240,232,0.85);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .testimonial-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(192,57,43,0.15);
+    border: 1px solid rgba(192,57,43,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    color: var(--red);
+    flex-shrink: 0;
+  }
+
+  .testimonial-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 3px;
+    color: var(--paper);
+    line-height: 1.2;
+  }
+
+  .testimonial-role {
+    font-size: 0.82rem;
+    color: rgba(245,240,232,0.4);
+    font-style: italic;
+    margin-top: 0.2rem;
+  }
+
+  .testimonial-tag {
+    margin-left: auto;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    padding: 0.3rem 0.8rem;
+    border: 1px solid rgba(184,134,11,0.3);
+    color: var(--gold);
+    opacity: 0.7;
+    align-self: center;
+  }
+
+  .carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-top: 2.5rem;
+  }
+
+  .carousel-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(184,134,11,0.2);
+    border: 1px solid rgba(184,134,11,0.4);
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+    padding: 0;
+    outline: none;
+  }
+
+  .carousel-dot.active {
+    background: var(--gold);
+    transform: scale(1.4);
+    border-color: var(--gold);
+  }
+
+  .carousel-arrows {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.75rem;
+  }
+
+  .carousel-arrow {
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(184,134,11,0.3);
+    background: transparent;
+    color: rgba(245,240,232,0.5);
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .carousel-arrow:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
   @media (max-width: 768px) {
     nav { padding: 1rem 1.5rem; }
     .nav-links { display: none; }
@@ -493,6 +675,8 @@
     .flash-grid { grid-template-columns: repeat(2,1fr); }
     .form-row { grid-template-columns: 1fr; }
     .btn-secondary { margin-left: 0; margin-top: 1rem; display: block; text-align: center; }
+    .testimonial-inner { padding: 2rem 1.5rem; }
+    .testimonial-tag { display: none; }
   }
 </style>
 </head>
@@ -504,6 +688,7 @@
     <li><a href="#sobre-mi">Bio</a></li>
     <li><a href="#proceso">Proceso</a></li>
     <li><a href="#flash">Flash</a></li>
+    <li><a href="#testimonios">Clientes</a></li>
     <li><a href="#agendar">Agendar</a></li>
   </ul>
 </nav>
@@ -730,6 +915,106 @@
   </div>
 </section>
 
+<section class="testimonials" id="testimonios">
+  <div class="container">
+    <div class="testimonials-header">
+      <p class="section-label">— Lo que dicen</p>
+      <h2 class="section-title">Clientes reales,<br>piel real</h2>
+    </div>
+
+    <div class="carousel-wrapper" id="carousel">
+      <div class="carousel-track" id="carouselTrack">
+
+        <div class="testimonial-card">
+          <div class="testimonial-inner">
+            <div class="testimonial-quote-mark">"</div>
+            <div class="testimonial-stars">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <p class="testimonial-text">Laura diseñó algo completamente único para mí. Desde el primer mensaje entendió exactamente lo que quería y le dio su toque sin perder la esencia. El resultado superó todo lo que imaginé. Ya estoy planeando el siguiente.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">MV</div>
+              <div>
+                <div class="testimonial-name">Mariana Vargas</div>
+                <div class="testimonial-role">Antebrazo · blackwork</div>
+              </div>
+              <span class="testimonial-tag">Cliente frecuente</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-inner">
+            <div class="testimonial-quote-mark">"</div>
+            <div class="testimonial-stars">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <p class="testimonial-text">Era mi primer tatuaje y estaba nerviosa. Laura me explicó todo el proceso, fue súper cuidadosa y el estudio es impecable. El diseño quedó precioso. Ya no me da miedo el aguijón.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">SC</div>
+              <div>
+                <div class="testimonial-name">Sofía Castro</div>
+                <div class="testimonial-role">Tobillo · tradicional</div>
+              </div>
+              <span class="testimonial-tag">Primer tatuaje</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-inner">
+            <div class="testimonial-quote-mark">"</div>
+            <div class="testimonial-stars">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <p class="testimonial-text">Le mandé solo una foto de referencia y un par de palabras. Lo que llegó fue mejor de lo que hubiera podido pedir. Laura tiene algo especial — convierte emociones en líneas. Llevo tres tatuajes de ella y cada uno me representa más que el anterior.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">DP</div>
+              <div>
+                <div class="testimonial-name">Diego Peña</div>
+                <div class="testimonial-role">Brazo · neo-tradicional</div>
+              </div>
+              <span class="testimonial-tag">3 tatuajes</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-inner">
+            <div class="testimonial-quote-mark">"</div>
+            <div class="testimonial-stars">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <p class="testimonial-text">El proceso fue muy transparente: cotización rápida, anticipo claro, diseño listo el día de la cita. Nada de sorpresas. Y el tatuaje cicatrizó perfecto, lo que habla muy bien del cuidado que pone en el proceso.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">LM</div>
+              <div>
+                <div class="testimonial-name">Lucía Morales</div>
+                <div class="testimonial-role">Costillas · ilustrativo</div>
+              </div>
+              <span class="testimonial-tag">Diseño custom</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="carousel-dots" id="carouselDots">
+      <button class="carousel-dot active" data-index="0" aria-label="Testimonio 1"></button>
+      <button class="carousel-dot" data-index="1" aria-label="Testimonio 2"></button>
+      <button class="carousel-dot" data-index="2" aria-label="Testimonio 3"></button>
+      <button class="carousel-dot" data-index="3" aria-label="Testimonio 4"></button>
+    </div>
+
+    <div class="carousel-arrows">
+      <button class="carousel-arrow" id="prevBtn" aria-label="Anterior">&#8592;</button>
+      <button class="carousel-arrow" id="nextBtn" aria-label="Siguiente">&#8594;</button>
+    </div>
+
+  </div>
+</section>
+
 <section class="booking" id="agendar">
   <div class="container">
     <div class="orn-line"><span>reserva tu cita</span></div>
@@ -840,6 +1125,52 @@
     form.style.display = 'none';
     success.style.display = 'block';
   }
+
+  // ── Testimonial Carousel ──
+  (function () {
+    const track = document.getElementById('carouselTrack');
+    const dots = document.querySelectorAll('.carousel-dot');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const total = dots.length;
+    let current = 0;
+    let autoTimer;
+    let dragStartX = 0;
+    let isDragging = false;
+
+    function goTo(index) {
+      current = (index + total) % total;
+      track.style.transform = `translateX(-${current * 100}%)`;
+      dots.forEach((d, i) => d.classList.toggle('active', i === current));
+    }
+
+    prevBtn.addEventListener('click', () => { goTo(current - 1); resetAuto(); });
+    nextBtn.addEventListener('click', () => { goTo(current + 1); resetAuto(); });
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => { goTo(+dot.dataset.index); resetAuto(); });
+    });
+
+    // Drag / swipe
+    track.addEventListener('mousedown', e => { isDragging = true; dragStartX = e.clientX; });
+    track.addEventListener('mousemove', e => { if (isDragging) e.preventDefault(); });
+    track.addEventListener('mouseup', e => {
+      if (!isDragging) return;
+      isDragging = false;
+      const diff = dragStartX - e.clientX;
+      if (Math.abs(diff) > 50) { goTo(diff > 0 ? current + 1 : current - 1); resetAuto(); }
+    });
+    track.addEventListener('mouseleave', () => { isDragging = false; });
+
+    track.addEventListener('touchstart', e => { dragStartX = e.touches[0].clientX; }, { passive: true });
+    track.addEventListener('touchend', e => {
+      const diff = dragStartX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) { goTo(diff > 0 ? current + 1 : current - 1); resetAuto(); }
+    });
+
+    function startAuto() { autoTimer = setInterval(() => goTo(current + 1), 5000); }
+    function resetAuto() { clearInterval(autoTimer); startAuto(); }
+    startAuto();
+  })();
 </script>
 
 </body>
