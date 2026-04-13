@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Laura Roa Tattoo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  /* ── Design Tokens ── */
+  :root {
+    --c-bg: #0c0c0c;
+    --c-surface: #141413;
+    --c-elevated: #1c1c19;
+    --c-border: rgba(245,240,232,0.07);
+    --c-border-hover: rgba(245,240,232,0.14);
+    --c-cream: #f5f0e8;
+    --c-muted: rgba(245,240,232,0.45);
+    --c-faint: rgba(245,240,232,0.2);
+    --c-accent: #c0392b;
+    --c-accent-soft: rgba(192,57,43,0.15);
+    --c-green: #27ae60;
+    --c-green-soft: rgba(39,174,96,0.12);
+    --c-amber: #f39c12;
+    --c-amber-soft: rgba(243,156,18,0.12);
+    --c-blue: #2980b9;
+    --c-blue-soft: rgba(41,128,185,0.12);
+    --c-purple: #8e44ad;
+    --c-purple-soft: rgba(142,68,173,0.12);
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.4), 0 0 0 1px var(--c-border);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+  body {
+    background: var(--c-bg);
+    color: var(--c-cream);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* Subtle grain */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    opacity: 0.018;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 200px;
+  }
+
+  .font-display { font-family: 'Bebas Neue', sans-serif; }
+  .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* ── Layout ── */
+  .dashboard {
+    position: relative; z-index: 1;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+  }
+
+  /* ── Header ── */
+  .dash-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .dash-header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    letter-spacing: 0.06em;
+    color: var(--c-cream);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .dash-header h1 .dot {
+    width: 8px; height: 8px;
+    background: var(--c-accent);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  .period-selector {
+    display: flex; gap: 4px;
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-sm);
+    padding: 3px;
+  }
+
+  .period-btn {
+    background: none; border: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: var(--c-muted);
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .period-btn:hover { color: var(--c-cream); }
+  .period-btn.active {
+    background: var(--c-elevated);
+    color: var(--c-cream);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+
+  /* ── KPI Cards ── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .kpi-card {
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    transition: border-color 0.25s ease, transform 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi-card:hover {
+    border-color: var(--c-border-hover);
+    transform: translateY(-1px);
+  }
+
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .kpi-card:hover::before { opacity: 1; }
+  .kpi-card.red::before { background: var(--c-accent); }
+  .kpi-card.green::before { background: var(--c-green); }
+  .kpi-card.amber::before { background: var(--c-amber); }
+  .kpi-card.blue::before { background: var(--c-blue); }
+  .kpi-card.purple::before { background: var(--c-purple); }
+
+  .kpi-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c-muted);
+    margin-bottom: 10px;
+  }
+
+  .kpi-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .kpi-change {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 400;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .kpi-change.up { color: var(--c-green); background: var(--c-green-soft); }
+  .kpi-change.down { color: var(--c-accent); background: var(--c-accent-soft); }
+
+  /* ── Chart Panels ── */
+  .charts-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  @media (max-width: 768px) {
+    .charts-row { grid-template-columns: 1fr; }
+  }
+
+  .chart-panel {
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius);
+    padding: 22px;
+    transition: border-color 0.25s ease;
+  }
+  .chart-panel:hover { border-color: var(--c-border-hover); }
+
+  .chart-panel.full { grid-column: 1 / -1; }
+
+  .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .panel-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    color: var(--c-cream);
+  }
+
+  .panel-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--c-muted);
+    background: var(--c-elevated);
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+
+  .chart-container {
+    position: relative;
+    height: 240px;
+  }
+
+  .chart-container.tall { height: 300px; }
+
+  /* ── Table ── */
+  .table-wrap {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+
+  thead th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c-muted);
+    text-align: left;
+    padding: 0 12px 12px;
+    border-bottom: 1px solid var(--c-border);
+  }
+
+  tbody td {
+    padding: 12px;
+    border-bottom: 1px solid var(--c-border);
+    color: var(--c-cream);
+    font-family: 'Crimson Pro', serif;
+    font-size: 0.9rem;
+  }
+
+  tbody tr { transition: background 0.15s ease; }
+  tbody tr:hover { background: rgba(245,240,232,0.02); }
+
+  .source-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+
+  /* ── Social Cards ── */
+  .social-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .social-card {
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius);
+    padding: 22px;
+    transition: border-color 0.25s ease;
+  }
+  .social-card:hover { border-color: var(--c-border-hover); }
+
+  .social-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .social-icon {
+    width: 36px; height: 36px;
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+  }
+
+  .social-icon.ig { background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+  .social-icon.wa { background: #25d366; }
+  .social-icon.tt { background: #010101; border: 1px solid rgba(245,240,232,0.1); }
+
+  .social-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--c-cream);
+  }
+
+  .social-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .social-metric-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--c-muted);
+    margin-bottom: 4px;
+  }
+
+  .social-metric-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--c-cream);
+  }
+
+  /* ── Footer note ── */
+  .dash-footer {
+    text-align: center;
+    padding-top: 32px;
+    border-top: 1px solid var(--c-border);
+  }
+
+  .dash-footer p {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--c-muted);
+    letter-spacing: 0.04em;
+  }
+
+  .dash-footer a {
+    color: var(--c-accent);
+    text-decoration: none;
+  }
+
+  /* ── Section titles ── */
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.14em;
+    color: var(--c-muted);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--c-border);
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-in {
+    animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .delay-1 { animation-delay: 0.05s; }
+  .delay-2 { animation-delay: 0.1s; }
+  .delay-3 { animation-delay: 0.15s; }
+  .delay-4 { animation-delay: 0.2s; }
+  .delay-5 { animation-delay: 0.25s; }
+  .delay-6 { animation-delay: 0.3s; }
+  .delay-7 { animation-delay: 0.35s; }
+  .delay-8 { animation-delay: 0.4s; }
+
+  /* ── Responsive ── */
+  @media (max-width: 600px) {
+    .kpi-grid { grid-template-columns: 1fr 1fr; }
+    .kpi-value { font-size: 1.7rem; }
+    .dash-header h1 { font-size: 1.5rem; }
+    .social-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="dashboard">
+
+  <!-- Header -->
+  <header class="dash-header animate-in">
+    <h1><span class="dot"></span> LAURA ROA — MÉTRICAS</h1>
+    <div class="period-selector">
+      <button class="period-btn" data-period="7d">7D</button>
+      <button class="period-btn active" data-period="30d">30D</button>
+      <button class="period-btn" data-period="90d">90D</button>
+    </div>
+  </header>
+
+  <!-- KPI Cards -->
+  <div class="kpi-grid">
+    <div class="kpi-card red animate-in delay-1">
+      <div class="kpi-label">Visitantes únicos</div>
+      <div class="kpi-value" id="kpi-visitors">1,247</div>
+      <span class="kpi-change up">↑ 23.4%</span>
+    </div>
+    <div class="kpi-card green animate-in delay-2">
+      <div class="kpi-label">Páginas vistas</div>
+      <div class="kpi-value" id="kpi-pageviews">3,891</div>
+      <span class="kpi-change up">↑ 18.2%</span>
+    </div>
+    <div class="kpi-card amber animate-in delay-3">
+      <div class="kpi-label">Tiempo promedio</div>
+      <div class="kpi-value" id="kpi-time">2:34</div>
+      <span class="kpi-change up">↑ 12.1%</span>
+    </div>
+    <div class="kpi-card blue animate-in delay-4">
+      <div class="kpi-label">Tasa de rebote</div>
+      <div class="kpi-value" id="kpi-bounce">38.2%</div>
+      <span class="kpi-change up">↓ 5.7%</span>
+    </div>
+    <div class="kpi-card purple animate-in delay-5">
+      <div class="kpi-label">Clics WhatsApp</div>
+      <div class="kpi-value" id="kpi-wa">187</div>
+      <span class="kpi-change up">↑ 31.0%</span>
+    </div>
+  </div>
+
+  <!-- Charts Row 1: Traffic + Devices -->
+  <div class="charts-row">
+    <div class="chart-panel animate-in delay-5">
+      <div class="panel-header">
+        <span class="panel-title">TRÁFICO DIARIO</span>
+        <span class="panel-badge">Últimos 30 días</span>
+      </div>
+      <div class="chart-container tall">
+        <canvas id="chart-traffic"></canvas>
+      </div>
+    </div>
+    <div class="chart-panel animate-in delay-6">
+      <div class="panel-header">
+        <span class="panel-title">DISPOSITIVOS</span>
+        <span class="panel-badge">Distribución</span>
+      </div>
+      <div class="chart-container tall">
+        <canvas id="chart-devices"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Conversions Section -->
+  <div class="section-title animate-in delay-6">CONVERSIONES</div>
+
+  <div class="charts-row">
+    <div class="chart-panel animate-in delay-6">
+      <div class="panel-header">
+        <span class="panel-title">ACCIONES POR DÍA</span>
+        <span class="panel-badge">CTA clicks</span>
+      </div>
+      <div class="chart-container">
+        <canvas id="chart-conversions"></canvas>
+      </div>
+    </div>
+    <div class="chart-panel animate-in delay-7">
+      <div class="panel-header">
+        <span class="panel-title">FUENTES DE TRÁFICO</span>
+        <span class="panel-badge">Top canales</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Fuente</th>
+              <th>Visitas</th>
+              <th>Conversión</th>
+            </tr>
+          </thead>
+          <tbody id="sources-table">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Social Section -->
+  <div class="section-title animate-in delay-7">REDES SOCIALES</div>
+
+  <div class="social-grid">
+    <div class="social-card animate-in delay-7">
+      <div class="social-header">
+        <div class="social-icon ig">📸</div>
+        <span class="social-name">Instagram @lauraroatatt</span>
+      </div>
+      <div class="social-metrics">
+        <div>
+          <div class="social-metric-label">Seguidores</div>
+          <div class="social-metric-value" id="ig-followers">4,821</div>
+        </div>
+        <div>
+          <div class="social-metric-label">Nuevos / mes</div>
+          <div class="social-metric-value" id="ig-new">+342</div>
+        </div>
+        <div>
+          <div class="social-metric-label">Engagement</div>
+          <div class="social-metric-value" id="ig-engagement">5.8%</div>
+        </div>
+        <div>
+          <div class="social-metric-label">Alcance</div>
+          <div class="social-metric-value" id="ig-reach">12.4K</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="social-card animate-in delay-7">
+      <div class="social-header">
+        <div class="social-icon wa">💬</div>
+        <span class="social-name">WhatsApp Business</span>
+      </div>
+      <div class="social-metrics">
+        <div>
+          <div class="social-metric-label">Mensajes / mes</div>
+          <div class="social-metric-value" id="wa-messages">187</div>
+        </div>
+        <div>
+          <div class="social-metric-label">Respondidos</div>
+          <div class="social-metric-value" id="wa-replied">94%</div>
+        </div>
+        <div>
+          <div class="social-metric-label">Citas agendadas</div>
+          <div class="social-metric-value" id="wa-booked">67</div>
+        </div>
+        <div>
+          <div class="social-metric-label">Tasa cierre</div>
+          <div class="social-metric-value" id="wa-close">35.8%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="social-card animate-in delay-8">
+      <div class="social-header">
+        <div class="social-icon tt">🎵</div>
+        <span class="social-name">TikTok @lauraroatatt</span>
+      </div>
+      <div class="social-metrics">
+        <div>
+          <div class="social-metric-label">Seguidores</div>
+          <div class="social-metric-value" id="tt-followers">1,203</div>
+        </div>
+        <div>
+          <div class="social-metric-label">Vistas / mes</div>
+          <div class="social-metric-value" id="tt-views">28.7K</div>
+        </div>
+        <div>
+          <div class="social-metric-label">Likes</div>
+          <div class="social-metric-value" id="tt-likes">3,412</div>
+        </div>
+        <div>
+          <div class="social-metric-label">Compartidos</div>
+          <div class="social-metric-value" id="tt-shares">891</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Pages -->
+  <div class="charts-row">
+    <div class="chart-panel full animate-in delay-8">
+      <div class="panel-header">
+        <span class="panel-title">SECCIONES MÁS VISITADAS</span>
+        <span class="panel-badge">Engagement por sección</span>
+      </div>
+      <div class="chart-container">
+        <canvas id="chart-sections"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="dash-footer animate-in delay-8">
+    <p>Datos de ejemplo · Tu GA4 ya está activo: <a href="https://analytics.google.com" target="_blank">Ver datos reales en GA4 →</a></p>
+    <p style="margin-top:8px;">ID de medición: <span style="color:var(--c-accent);">G-Q3P84HMSCN</span> · Eventos configurados: form_submitted, whatsapp_clicked, cta_clicked, flash_viewed, gallery_viewed, section_viewed, scroll_depth</p>
+  </footer>
+
+</div>
+
+<script>
+// ── Chart.js Global Config ──
+Chart.defaults.color = 'rgba(245,240,232,0.4)';
+Chart.defaults.borderColor = 'rgba(245,240,232,0.06)';
+Chart.defaults.font.family = "'JetBrains Mono', monospace";
+Chart.defaults.font.size = 10;
+Chart.defaults.font.weight = 300;
+
+const ACCENT = '#c0392b';
+const GREEN = '#27ae60';
+const AMBER = '#f39c12';
+const BLUE = '#2980b9';
+const PURPLE = '#8e44ad';
+const CREAM = '#f5f0e8';
+
+// ── Sample Data ──
+const DATA = {
+  '7d': {
+    visitors: 312, pageviews: 978, time: '2:21', bounce: '41.5%', wa: 48,
+    visitorsChange: '+15.2%', pageviewsChange: '+11.8%', timeChange: '+8.3%', bounceChange: '-3.1%', waChange: '+22.6%',
+    trafficLabels: ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'],
+    trafficVisitors: [38, 42, 51, 44, 56, 47, 34],
+    trafficPageviews: [112, 134, 158, 140, 178, 149, 107],
+    convWa: [5, 8, 7, 6, 10, 8, 4],
+    convIg: [3, 5, 4, 3, 6, 5, 2],
+    convCita: [2, 3, 2, 2, 4, 3, 1],
+    ig: { followers: '4,821', new: '+87', engagement: '6.1%', reach: '3.2K' },
+    wa: { messages: '48', replied: '96%', booked: '18', close: '37.5%' },
+    tt: { followers: '1,203', views: '7.2K', likes: '856', shares: '223' }
+  },
+  '30d': {
+    visitors: 1247, pageviews: 3891, time: '2:34', bounce: '38.2%', wa: 187,
+    visitorsChange: '+23.4%', pageviewsChange: '+18.2%', timeChange: '+12.1%', bounceChange: '-5.7%', waChange: '+31.0%',
+    trafficLabels: Array.from({length: 30}, (_, i) => `${i+1}`),
+    trafficVisitors: [28,35,42,38,51,47,33,41,45,52,48,56,44,39,61,58,43,47,52,55,49,63,57,42,48,53,59,45,51,38],
+    trafficPageviews: [89,108,134,121,162,149,105,130,143,165,152,178,140,124,194,184,137,149,165,175,156,200,181,134,152,168,188,143,162,121],
+    convWa: [4,5,7,6,8,7,4,6,7,8,7,9,6,5,10,9,6,7,8,9,7,11,9,6,7,8,10,6,8,5],
+    convIg: [2,3,4,3,5,4,2,3,4,5,4,6,3,3,6,5,3,4,5,5,4,7,5,3,4,5,6,3,5,3],
+    convCita: [1,2,2,2,3,2,1,2,2,3,2,3,2,2,4,3,2,2,3,3,2,4,3,2,2,3,3,2,3,2],
+    ig: { followers: '4,821', new: '+342', engagement: '5.8%', reach: '12.4K' },
+    wa: { messages: '187', replied: '94%', booked: '67', close: '35.8%' },
+    tt: { followers: '1,203', views: '28.7K', likes: '3,412', shares: '891' }
+  },
+  '90d': {
+    visitors: 3542, pageviews: 11203, time: '2:28', bounce: '40.1%', wa: 512,
+    visitorsChange: '+45.8%', pageviewsChange: '+38.6%', timeChange: '+9.4%', bounceChange: '-8.2%', waChange: '+52.3%',
+    trafficLabels: ['Sem 1','Sem 2','Sem 3','Sem 4','Sem 5','Sem 6','Sem 7','Sem 8','Sem 9','Sem 10','Sem 11','Sem 12','Sem 13'],
+    trafficVisitors: [210,245,268,290,305,278,312,335,358,342,380,395,324],
+    trafficPageviews: [660,772,845,914,962,876,984,1056,1129,1078,1198,1246,1021],
+    convWa: [28,32,36,40,42,38,44,47,51,48,54,57,45],
+    convIg: [15,18,20,22,24,21,25,27,29,27,31,33,25],
+    convCita: [10,12,14,15,17,15,18,19,21,19,22,24,18],
+    ig: { followers: '4,821', new: '+1,024', engagement: '5.4%', reach: '38.2K' },
+    wa: { messages: '512', replied: '92%', booked: '183', close: '35.7%' },
+    tt: { followers: '1,203', views: '84.5K', likes: '9,876', shares: '2,541' }
+  }
+};
+
+const SOURCES = [
+  { name: 'Instagram', color: '#e6683c', visits: 512, conv: '4.8%' },
+  { name: 'Google (orgánico)', color: GREEN, visits: 389, conv: '3.2%' },
+  { name: 'Directo', color: BLUE, visits: 198, conv: '5.1%' },
+  { name: 'WhatsApp', color: '#25d366', visits: 87, conv: '8.7%' },
+  { name: 'TikTok', color: CREAM, visits: 61, conv: '2.4%' },
+];
+
+// ── Render Sources Table ──
+function renderSources() {
+  const tbody = document.getElementById('sources-table');
+  tbody.innerHTML = SOURCES.map(s => `
+    <tr>
+      <td><span class="source-dot" style="background:${s.color}"></span>${s.name}</td>
+      <td class="font-mono" style="font-size:0.75rem">${s.visits.toLocaleString()}</td>
+      <td class="font-mono" style="font-size:0.75rem">${s.conv}</td>
+    </tr>
+  `).join('');
+}
+
+// ── Charts ──
+let chartTraffic, chartDevices, chartConversions, chartSections;
+
+function createCharts(period) {
+  const d = DATA[period];
+
+  // Traffic Chart
+  const ctxTraffic = document.getElementById('chart-traffic').getContext('2d');
+  if (chartTraffic) chartTraffic.destroy();
+  chartTraffic = new Chart(ctxTraffic, {
+    type: 'line',
+    data: {
+      labels: d.trafficLabels,
+      datasets: [
+        {
+          label: 'Visitantes',
+          data: d.trafficVisitors,
+          borderColor: ACCENT,
+          backgroundColor: 'rgba(192,57,43,0.08)',
+          fill: true,
+          tension: 0.4,
+          borderWidth: 2,
+          pointRadius: 0,
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: ACCENT,
+        },
+        {
+          label: 'Páginas vistas',
+          data: d.trafficPageviews,
+          borderColor: 'rgba(245,240,232,0.25)',
+          backgroundColor: 'rgba(245,240,232,0.03)',
+          fill: true,
+          tension: 0.4,
+          borderWidth: 1.5,
+          pointRadius: 0,
+          pointHoverRadius: 4,
+          pointHoverBackgroundColor: CREAM,
+          borderDash: [4, 3],
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { intersect: false, mode: 'index' },
+      plugins: {
+        legend: { display: true, position: 'top', align: 'end',
+          labels: { boxWidth: 12, boxHeight: 2, padding: 16, font: { size: 9 } }
+        },
+        tooltip: {
+          backgroundColor: '#1c1c19',
+          borderColor: 'rgba(245,240,232,0.1)',
+          borderWidth: 1,
+          titleFont: { family: "'JetBrains Mono'", size: 10 },
+          bodyFont: { family: "'JetBrains Mono'", size: 10 },
+          padding: 10,
+          cornerRadius: 6,
+        }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { maxTicksLimit: 10 } },
+        y: { grid: { color: 'rgba(245,240,232,0.04)' }, beginAtZero: true }
+      }
+    }
+  });
+
+  // Devices Chart
+  const ctxDevices = document.getElementById('chart-devices').getContext('2d');
+  if (chartDevices) chartDevices.destroy();
+  chartDevices = new Chart(ctxDevices, {
+    type: 'doughnut',
+    data: {
+      labels: ['Móvil', 'Desktop', 'Tablet'],
+      datasets: [{
+        data: [72, 22, 6],
+        backgroundColor: [ACCENT, 'rgba(245,240,232,0.2)', AMBER],
+        borderColor: '#141413',
+        borderWidth: 3,
+        hoverOffset: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '68%',
+      plugins: {
+        legend: { position: 'bottom',
+          labels: { padding: 20, boxWidth: 10, boxHeight: 10, font: { size: 10 } }
+        },
+        tooltip: {
+          backgroundColor: '#1c1c19',
+          borderColor: 'rgba(245,240,232,0.1)',
+          borderWidth: 1,
+          titleFont: { family: "'JetBrains Mono'", size: 10 },
+          bodyFont: { family: "'JetBrains Mono'", size: 10 },
+          padding: 10,
+          cornerRadius: 6,
+          callbacks: { label: (ctx) => ` ${ctx.label}: ${ctx.parsed}%` }
+        }
+      }
+    }
+  });
+
+  // Conversions Chart
+  const ctxConv = document.getElementById('chart-conversions').getContext('2d');
+  if (chartConversions) chartConversions.destroy();
+  chartConversions = new Chart(ctxConv, {
+    type: 'bar',
+    data: {
+      labels: d.trafficLabels,
+      datasets: [
+        {
+          label: 'WhatsApp',
+          data: d.convWa,
+          backgroundColor: '#25d366',
+          borderRadius: 3,
+          barPercentage: 0.7,
+          categoryPercentage: 0.8,
+        },
+        {
+          label: 'Instagram',
+          data: d.convIg,
+          backgroundColor: '#e6683c',
+          borderRadius: 3,
+          barPercentage: 0.7,
+          categoryPercentage: 0.8,
+        },
+        {
+          label: 'Agendar cita',
+          data: d.convCita,
+          backgroundColor: AMBER,
+          borderRadius: 3,
+          barPercentage: 0.7,
+          categoryPercentage: 0.8,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { intersect: false, mode: 'index' },
+      plugins: {
+        legend: { display: true, position: 'top', align: 'end',
+          labels: { boxWidth: 10, boxHeight: 10, padding: 14, font: { size: 9 } }
+        },
+        tooltip: {
+          backgroundColor: '#1c1c19',
+          borderColor: 'rgba(245,240,232,0.1)',
+          borderWidth: 1,
+          titleFont: { family: "'JetBrains Mono'", size: 10 },
+          bodyFont: { family: "'JetBrains Mono'", size: 10 },
+          padding: 10,
+          cornerRadius: 6,
+        }
+      },
+      scales: {
+        x: { grid: { display: false }, stacked: true, ticks: { maxTicksLimit: 10 } },
+        y: { grid: { color: 'rgba(245,240,232,0.04)' }, stacked: true, beginAtZero: true }
+      }
+    }
+  });
+
+  // Sections Chart
+  const ctxSections = document.getElementById('chart-sections').getContext('2d');
+  if (chartSections) chartSections.destroy();
+  chartSections = new Chart(ctxSections, {
+    type: 'bar',
+    data: {
+      labels: ['Hero / Inicio', 'Galería', 'Estilos', 'Sobre mí', 'Flash Sheets', 'Contacto / CTA'],
+      datasets: [{
+        label: 'Interacciones',
+        data: [890, 1240, 670, 420, 380, 560],
+        backgroundColor: [
+          'rgba(192,57,43,0.7)',
+          'rgba(192,57,43,0.55)',
+          'rgba(192,57,43,0.4)',
+          'rgba(192,57,43,0.3)',
+          'rgba(192,57,43,0.22)',
+          'rgba(192,57,43,0.5)',
+        ],
+        borderRadius: 6,
+        barPercentage: 0.6,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: 'y',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1c1c19',
+          borderColor: 'rgba(245,240,232,0.1)',
+          borderWidth: 1,
+          titleFont: { family: "'JetBrains Mono'", size: 10 },
+          bodyFont: { family: "'JetBrains Mono'", size: 10 },
+          padding: 10,
+          cornerRadius: 6,
+        }
+      },
+      scales: {
+        x: { grid: { color: 'rgba(245,240,232,0.04)' }, beginAtZero: true },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+}
+
+// ── Update KPIs ──
+function updateKPIs(period) {
+  const d = DATA[period];
+  document.getElementById('kpi-visitors').textContent = d.visitors.toLocaleString();
+  document.getElementById('kpi-pageviews').textContent = d.pageviews.toLocaleString();
+  document.getElementById('kpi-time').textContent = d.time;
+  document.getElementById('kpi-bounce').textContent = d.bounce;
+  document.getElementById('kpi-wa').textContent = d.wa.toLocaleString();
+
+  // Update change badges
+  const cards = document.querySelectorAll('.kpi-card');
+  const changes = [d.visitorsChange, d.pageviewsChange, d.timeChange, d.bounceChange, d.waChange];
+  cards.forEach((card, i) => {
+    const badge = card.querySelector('.kpi-change');
+    const val = changes[i];
+    badge.textContent = (val.startsWith('+') || val.startsWith('-')) ?
+      `${val.startsWith('+') ? '↑' : '↓'} ${val.replace('+','').replace('-','')}` : val;
+    badge.className = 'kpi-change ' + (val.startsWith('+') || (i === 3 && val.startsWith('-')) ? 'up' : 'down');
+  });
+
+  // Update social
+  document.getElementById('ig-followers').textContent = d.ig.followers;
+  document.getElementById('ig-new').textContent = d.ig.new;
+  document.getElementById('ig-engagement').textContent = d.ig.engagement;
+  document.getElementById('ig-reach').textContent = d.ig.reach;
+  document.getElementById('wa-messages').textContent = d.wa.messages;
+  document.getElementById('wa-replied').textContent = d.wa.replied;
+  document.getElementById('wa-booked').textContent = d.wa.booked;
+  document.getElementById('wa-close').textContent = d.wa.close;
+  document.getElementById('tt-followers').textContent = d.tt.followers;
+  document.getElementById('tt-views').textContent = d.tt.views;
+  document.getElementById('tt-likes').textContent = d.tt.likes;
+  document.getElementById('tt-shares').textContent = d.tt.shares;
+}
+
+// ── Period Switching ──
+document.querySelectorAll('.period-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const period = btn.dataset.period;
+    updateKPIs(period);
+    createCharts(period);
+  });
+});
+
+// ── Init ──
+renderSources();
+createCharts('30d');
+updateKPIs('30d');
+</script>
+
+</body>
+</html>
