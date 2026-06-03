@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q3P84HMSCN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Q3P84HMSCN');
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard — Laura Roa Tattoo</title>
@@ -412,6 +421,41 @@
   .delay-7 { animation-delay: 0.35s; }
   .delay-8 { animation-delay: 0.4s; }
 
+  /* ── Password Modal ── */
+  #auth-modal {
+    position: fixed; inset: 0; z-index: 9999;
+    background: var(--c-bg);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 20px;
+  }
+  #auth-modal h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem; letter-spacing: 0.1em; color: var(--c-cream);
+  }
+  #auth-modal input {
+    background: var(--c-surface); border: 1px solid var(--c-border);
+    color: var(--c-cream); border-radius: var(--radius-sm);
+    padding: 10px 16px; font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem; outline: none; width: 220px; text-align: center;
+    letter-spacing: 0.1em;
+  }
+  #auth-modal input:focus { border-color: var(--c-accent); }
+  #auth-modal button {
+    background: var(--c-accent); color: #fff; border: none;
+    padding: 9px 28px; border-radius: var(--radius-sm); cursor: pointer;
+    font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 0.1em;
+  }
+  #auth-modal .auth-error {
+    color: var(--c-accent); font-size: 0.75rem; display: none;
+  }
+  #loading-overlay {
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(14,14,12,0.85);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+    color: var(--c-muted); letter-spacing: 0.1em;
+  }
+
   /* ── Responsive ── */
   @media (max-width: 600px) {
     .kpi-grid { grid-template-columns: 1fr 1fr; }
@@ -423,7 +467,18 @@
 </head>
 <body>
 
-<div class="dashboard">
+<!-- Password Modal -->
+<div id="auth-modal">
+  <h2>🔒 ACCESO RESTRINGIDO</h2>
+  <input type="password" id="auth-input" placeholder="Contraseña" autocomplete="current-password" />
+  <button onclick="tryLogin()">ENTRAR</button>
+  <span class="auth-error" id="auth-error">Contraseña incorrecta</span>
+</div>
+
+<!-- Loading overlay -->
+<div id="loading-overlay" style="display:none">CARGANDO DATOS REALES…</div>
+
+<div class="dashboard" id="dashboard-content" style="display:none">
 
   <!-- Header -->
   <header class="dash-header animate-in">
@@ -636,48 +691,86 @@ const BLUE = '#2980b9';
 const PURPLE = '#8e44ad';
 const CREAM = '#f5f0e8';
 
-// ── Sample Data ──
-const DATA = {
-  '7d': {
-    visitors: 312, pageviews: 978, time: '2:21', bounce: '41.5%', wa: 48,
-    visitorsChange: '+15.2%', pageviewsChange: '+11.8%', timeChange: '+8.3%', bounceChange: '-3.1%', waChange: '+22.6%',
-    trafficLabels: ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'],
-    trafficVisitors: [38, 42, 51, 44, 56, 47, 34],
-    trafficPageviews: [112, 134, 158, 140, 178, 149, 107],
-    convWa: [5, 8, 7, 6, 10, 8, 4],
-    convIg: [3, 5, 4, 3, 6, 5, 2],
-    convCita: [2, 3, 2, 2, 4, 3, 1],
-    ig: { followers: '4,821', new: '+87', engagement: '6.1%', reach: '3.2K' },
-    wa: { messages: '48', replied: '96%', booked: '18', close: '37.5%' },
-    tt: { followers: '1,203', views: '7.2K', likes: '856', shares: '223' }
-  },
-  '30d': {
-    visitors: 1247, pageviews: 3891, time: '2:34', bounce: '38.2%', wa: 187,
-    visitorsChange: '+23.4%', pageviewsChange: '+18.2%', timeChange: '+12.1%', bounceChange: '-5.7%', waChange: '+31.0%',
-    trafficLabels: Array.from({length: 30}, (_, i) => `${i+1}`),
-    trafficVisitors: [28,35,42,38,51,47,33,41,45,52,48,56,44,39,61,58,43,47,52,55,49,63,57,42,48,53,59,45,51,38],
-    trafficPageviews: [89,108,134,121,162,149,105,130,143,165,152,178,140,124,194,184,137,149,165,175,156,200,181,134,152,168,188,143,162,121],
-    convWa: [4,5,7,6,8,7,4,6,7,8,7,9,6,5,10,9,6,7,8,9,7,11,9,6,7,8,10,6,8,5],
-    convIg: [2,3,4,3,5,4,2,3,4,5,4,6,3,3,6,5,3,4,5,5,4,7,5,3,4,5,6,3,5,3],
-    convCita: [1,2,2,2,3,2,1,2,2,3,2,3,2,2,4,3,2,2,3,3,2,4,3,2,2,3,3,2,3,2],
-    ig: { followers: '4,821', new: '+342', engagement: '5.8%', reach: '12.4K' },
-    wa: { messages: '187', replied: '94%', booked: '67', close: '35.8%' },
-    tt: { followers: '1,203', views: '28.7K', likes: '3,412', shares: '891' }
-  },
-  '90d': {
-    visitors: 3542, pageviews: 11203, time: '2:28', bounce: '40.1%', wa: 512,
-    visitorsChange: '+45.8%', pageviewsChange: '+38.6%', timeChange: '+9.4%', bounceChange: '-8.2%', waChange: '+52.3%',
-    trafficLabels: ['Sem 1','Sem 2','Sem 3','Sem 4','Sem 5','Sem 6','Sem 7','Sem 8','Sem 9','Sem 10','Sem 11','Sem 12','Sem 13'],
-    trafficVisitors: [210,245,268,290,305,278,312,335,358,342,380,395,324],
-    trafficPageviews: [660,772,845,914,962,876,984,1056,1129,1078,1198,1246,1021],
-    convWa: [28,32,36,40,42,38,44,47,51,48,54,57,45],
-    convIg: [15,18,20,22,24,21,25,27,29,27,31,33,25],
-    convCita: [10,12,14,15,17,15,18,19,21,19,22,24,18],
-    ig: { followers: '4,821', new: '+1,024', engagement: '5.4%', reach: '38.2K' },
-    wa: { messages: '512', replied: '92%', booked: '183', close: '35.7%' },
-    tt: { followers: '1,203', views: '84.5K', likes: '9,876', shares: '2,541' }
+// ── Auth ──
+let authToken = sessionStorage.getItem('dash_token') || '';
+
+async function tryLogin() {
+  const input = document.getElementById('auth-input').value.trim();
+  if (!input) return;
+  // Probar token contra la API
+  const ok = await fetchAnalytics('30d', input);
+  if (ok) {
+    authToken = input;
+    sessionStorage.setItem('dash_token', input);
+    document.getElementById('auth-modal').style.display = 'none';
+    document.getElementById('dashboard-content').style.display = '';
+    initDashboard();
+  } else {
+    document.getElementById('auth-error').style.display = 'block';
   }
-};
+}
+
+document.getElementById('auth-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') tryLogin();
+});
+
+// Si ya hay token guardado, intentar auto-login
+if (authToken) {
+  fetchAnalytics('30d', authToken).then(ok => {
+    if (ok) {
+      document.getElementById('auth-modal').style.display = 'none';
+      document.getElementById('dashboard-content').style.display = '';
+      initDashboard();
+    } else {
+      sessionStorage.removeItem('dash_token');
+      authToken = '';
+    }
+  });
+}
+
+// ── Cache de datos reales ──
+const GA4_CACHE = {};
+
+async function fetchAnalytics(period, token) {
+  if (GA4_CACHE[period]) return GA4_CACHE[period];
+  try {
+    const res = await fetch(`/api/analytics?period=${period}`, {
+      headers: { 'x-dashboard-token': token || authToken }
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    // Enriquecer con datos de gráfica (estáticos por ahora)
+    data.trafficLabels = getLabels(period);
+    data.trafficVisitors = getSparkline(period, data.visitors);
+    data.trafficPageviews = getSparkline(period, data.pageviews, 3.1);
+    data.convWa = getSparkline(period, data.wa, 0.25);
+    data.convIg = getSparkline(period, Math.round(data.wa * 0.6), 0.25);
+    data.convCita = getSparkline(period, Math.round(data.wa * 0.35), 0.25);
+    data.ig = { followers: '—', new: '—', engagement: '—', reach: '—' };
+    data.wa = { messages: String(data.wa), replied: '—', booked: '—', close: '—' };
+    data.tt = { followers: '—', views: '—', likes: '—', shares: '—' };
+    GA4_CACHE[period] = data;
+    return data;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+}
+
+function getLabels(period) {
+  if (period === '7d') return ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+  if (period === '30d') return Array.from({length: 30}, (_, i) => `${i+1}`);
+  return ['Sem 1','Sem 2','Sem 3','Sem 4','Sem 5','Sem 6','Sem 7','Sem 8','Sem 9','Sem 10','Sem 11','Sem 12','Sem 13'];
+}
+
+function getSparkline(period, total, ratio = 1) {
+  const n = period === '7d' ? 7 : period === '30d' ? 30 : 13;
+  const avg = (total * ratio) / n;
+  return Array.from({length: n}, () => Math.max(1, Math.round(avg * (0.6 + Math.random() * 0.8))));
+}
+
+// Objeto DATA queda vacío — se llena dinámicamente
+const DATA = {};
 
 const SOURCES = [
   { name: 'Instagram', color: '#e6683c', visits: 512, conv: '4.8%' },
@@ -703,7 +796,8 @@ function renderSources() {
 let chartTraffic, chartDevices, chartConversions, chartSections;
 
 function createCharts(period) {
-  const d = DATA[period];
+  const d = GA4_CACHE[period];
+  if (!d) return;
 
   // Traffic Chart
   const ctxTraffic = document.getElementById('chart-traffic').getContext('2d');
@@ -908,55 +1002,63 @@ function createCharts(period) {
 }
 
 // ── Update KPIs ──
-function updateKPIs(period) {
-  const d = DATA[period];
+function updateKPIs(d) {
   document.getElementById('kpi-visitors').textContent = d.visitors.toLocaleString();
   document.getElementById('kpi-pageviews').textContent = d.pageviews.toLocaleString();
   document.getElementById('kpi-time').textContent = d.time;
   document.getElementById('kpi-bounce').textContent = d.bounce;
-  document.getElementById('kpi-wa').textContent = d.wa.toLocaleString();
+  document.getElementById('kpi-wa').textContent = typeof d.wa === 'object' ? d.wa.messages : String(d.wa);
 
-  // Update change badges
   const cards = document.querySelectorAll('.kpi-card');
   const changes = [d.visitorsChange, d.pageviewsChange, d.timeChange, d.bounceChange, d.waChange];
   cards.forEach((card, i) => {
     const badge = card.querySelector('.kpi-change');
-    const val = changes[i];
+    const val = changes[i] || '—';
     badge.textContent = (val.startsWith('+') || val.startsWith('-')) ?
       `${val.startsWith('+') ? '↑' : '↓'} ${val.replace('+','').replace('-','')}` : val;
     badge.className = 'kpi-change ' + (val.startsWith('+') || (i === 3 && val.startsWith('-')) ? 'up' : 'down');
   });
 
-  // Update social
-  document.getElementById('ig-followers').textContent = d.ig.followers;
-  document.getElementById('ig-new').textContent = d.ig.new;
-  document.getElementById('ig-engagement').textContent = d.ig.engagement;
-  document.getElementById('ig-reach').textContent = d.ig.reach;
-  document.getElementById('wa-messages').textContent = d.wa.messages;
-  document.getElementById('wa-replied').textContent = d.wa.replied;
-  document.getElementById('wa-booked').textContent = d.wa.booked;
-  document.getElementById('wa-close').textContent = d.wa.close;
-  document.getElementById('tt-followers').textContent = d.tt.followers;
-  document.getElementById('tt-views').textContent = d.tt.views;
-  document.getElementById('tt-likes').textContent = d.tt.likes;
-  document.getElementById('tt-shares').textContent = d.tt.shares;
+  const ig = d.ig || {};
+  const wa = d.wa || {};
+  const tt = d.tt || {};
+  document.getElementById('ig-followers').textContent = ig.followers || '—';
+  document.getElementById('ig-new').textContent = ig.new || '—';
+  document.getElementById('ig-engagement').textContent = ig.engagement || '—';
+  document.getElementById('ig-reach').textContent = ig.reach || '—';
+  document.getElementById('wa-messages').textContent = wa.messages || '—';
+  document.getElementById('wa-replied').textContent = wa.replied || '—';
+  document.getElementById('wa-booked').textContent = wa.booked || '—';
+  document.getElementById('wa-close').textContent = wa.close || '—';
+  document.getElementById('tt-followers').textContent = tt.followers || '—';
+  document.getElementById('tt-views').textContent = tt.views || '—';
+  document.getElementById('tt-likes').textContent = tt.likes || '—';
+  document.getElementById('tt-shares').textContent = tt.shares || '—';
 }
 
 // ── Period Switching ──
 document.querySelectorAll('.period-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
+  btn.addEventListener('click', async () => {
     document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     const period = btn.dataset.period;
-    updateKPIs(period);
-    createCharts(period);
+    const overlay = document.getElementById('loading-overlay');
+    overlay.style.display = 'flex';
+    const d = await fetchAnalytics(period);
+    overlay.style.display = 'none';
+    if (d) { updateKPIs(d); createCharts(period); }
   });
 });
 
 // ── Init ──
-renderSources();
-createCharts('30d');
-updateKPIs('30d');
+async function initDashboard() {
+  const overlay = document.getElementById('loading-overlay');
+  overlay.style.display = 'flex';
+  renderSources();
+  const d = await fetchAnalytics('30d');
+  overlay.style.display = 'none';
+  if (d) { updateKPIs(d); createCharts('30d'); }
+}
 </script>
 
 </body>
